@@ -1,0 +1,108 @@
+<!-- subcategory-list.component.html -->
+<div class="subcategory-container">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Loading subcategories...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-message">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error }}</p>
+    <button mat-raised-button color="warn" (click)="loadAllSubcategories()">Retry</button>
+  </div>
+
+  <!-- Main Content -->
+  <div class="subcategory-content" *ngIf="!loading && !error">
+    <!-- Header Section -->
+    <header class="page-header">
+      <h1>Product Subcategories</h1>
+      <p>Browse through our extensive collection of product categories</p>
+    </header>
+
+    <!-- All Subcategories Section -->
+    <section class="section-card">
+      <div class="section-header">
+        <h2><mat-icon>category</mat-icon> All Subcategories</h2>
+        <div class="search-box">
+          <mat-form-field appearance="outline">
+            <mat-label>Search subcategories</mat-label>
+            <input matInput placeholder="Type to search" (input)="filterSubcategories($event)">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+      
+      <div class="subcategory-grid">
+        <a *ngFor="let subcat of filteredSubcategories" class="subcategory-card" [routerLink]="['/subcategory', subcat._id]">
+          <div class="card-icon">
+            <mat-icon>layers</mat-icon>
+          </div>
+          <h3>{{ subcat.name }}</h3>
+          <p class="parent-category">{{ subcat.category }}</p>
+          <div class="card-footer">
+            <span class="products-count">42 products</span>
+            <mat-icon>chevron_right</mat-icon>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Category Specific Subcategories -->
+    <section class="section-card" *ngIf="categorySubcategories.length > 0">
+      <div class="section-header">
+        <h2><mat-icon>label</mat-icon> Subcategories in {{ getCategoryName(categoryId) }}</h2>
+      </div>
+      
+      <div class="subcategory-list">
+        <div *ngFor="let subcat of categorySubcategories" class="list-item">
+          <div class="item-info">
+            <mat-icon class="item-icon">folder_open</mat-icon>
+            <div>
+              <h3>{{ subcat.name }}</h3>
+              <p class="item-meta">Slug: {{ subcat.slug }}</p>
+            </div>
+          </div>
+          <button mat-icon-button [routerLink]="['/subcategory', subcat._id]">
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Subcategory -->
+    <section class="featured-card" *ngIf="specificSubcategory">
+      <div class="featured-content">
+        <div class="featured-header">
+          <h2>Featured Subcategory</h2>
+          <mat-chip-list>
+            <mat-chip color="primary" selected>Popular</mat-chip>
+          </mat-chip-list>
+        </div>
+        <h3>{{ specificSubcategory.name }}</h3>
+        <p class="featured-description">Explore our collection of {{ specificSubcategory.name }} products</p>
+        
+        <div class="featured-meta">
+          <div class="meta-item">
+            <mat-icon>label</mat-icon>
+            <span>Slug: {{ specificSubcategory.slug }}</span>
+          </div>
+          <div class="meta-item">
+            <mat-icon>category</mat-icon>
+            <span>Parent: {{ specificSubcategory.category }}</span>
+          </div>
+        </div>
+        
+        <button mat-raised-button color="primary" class="explore-btn">
+          Explore {{ specificSubcategory.name }}
+          <mat-icon>arrow_right_alt</mat-icon>
+        </button>
+      </div>
+      <div class="featured-image">
+        <!-- Placeholder for subcategory image -->
+        <div class="image-placeholder"></div>
+      </div>
+    </section>
+  </div>
+</div>

@@ -1,0 +1,365 @@
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-gradient fixed-top">
+  <div class="container px-4">
+    <a class="navbar-brand fw-bold fs-3 brand-logo" (click)="navigateToList()" style="cursor: pointer;">
+      <i class="fas fa-crown me-2 crown-icon"></i>
+      <span class="brand-text">LUXE</span>
+    </a>
+    <div class="d-flex align-items-center">
+      <div class="nav-icons position-relative me-4">
+        <button class="nav-icon-btn me-3" type="button">
+          <i class="fas fa-search fs-5"></i>
+        </button>
+        <button class="nav-icon-btn me-3" type="button">
+          <i class="fas fa-heart fs-5"></i>
+        </button>
+        <button class="nav-icon-btn position-relative" type="button">
+          <i class="fas fa-shopping-bag fs-5"></i>
+          <span class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-circle bg-accent">
+            2
+          </span>
+        </button>
+      </div>
+      <button *ngIf="viewMode === 'details'" class="btn btn-outline-light rounded-pill px-4 py-2 back-btn" (click)="navigateToList()">
+        <i class="fas fa-arrow-left me-2"></i> Back to Collection
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section (only for list view) -->
+<div *ngIf="viewMode === 'list'" class="hero-section">
+  <div class="hero-overlay"></div>
+  <div class="container px-4 h-100 d-flex align-items-center">
+    <div class="hero-content text-center text-white">
+      <h1 class="hero-title display-2 fw-light mb-4">
+        Curated <span class="text-accent">Luxury</span>
+      </h1>
+      <p class="hero-subtitle lead fs-4 mb-5 opacity-90">
+        Discover exceptional quality with our hand-selected luxury items
+      </p>
+      <button class="btn btn-accent btn-lg rounded-pill px-5 py-3 hero-cta">
+        Explore Collection
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+  <div class="container px-4 py-5">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-state text-center py-5 my-5">
+      <div class="luxury-spinner">
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+      </div>
+      <p class="mt-5 fs-5 text-muted loading-text">
+        {{ viewMode === 'list' ? 'Curating our collection...' : 'Preparing your selection...' }}
+      </p>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-luxury alert-dismissible fade show" role="alert">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      {{ errorMessage }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <!-- Product List View -->
+    <div *ngIf="viewMode === 'list' && !isLoading && !errorMessage" class="product-list-section">
+      <!-- Filter Bar -->
+      <div class="filter-bar d-flex justify-content-between align-items-center mb-5 p-4 rounded-4 bg-light-subtle">
+        <div class="d-flex align-items-center gap-4">
+          <span class="text-muted fw-medium">Filter by:</span>
+          <select class="form-select form-select-sm border-0 bg-transparent">
+            <option>All Categories</option>
+            <option>Handbags</option>
+            <option>Accessories</option>
+            <option>Jewelry</option>
+          </select>
+          <select class="form-select form-select-sm border-0 bg-transparent">
+            <option>Price Range</option>
+            <option>Under $500</option>
+            <option>$500 - $1000</option>
+            <option>Above $1000</option>
+          </select>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+          <span class="text-muted small">{{ products.length }} items</span>
+          <div class="btn-group view-toggle" role="group">
+            <button type="button" class="btn btn-outline-secondary btn-sm active">
+              <i class="fas fa-th"></i>
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm">
+              <i class="fas fa-list"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-4 col-xl-3" *ngFor="let product of products; trackBy: trackByProductId">
+          <div class="card h-100 product-card border-0 shadow-sm">
+            <div class="product-image-container position-relative overflow-hidden">
+              <img [src]="product.imageCover" class="card-img-top product-image" [alt]="product.title">
+              
+              <!-- Product Badge -->
+              <div class="product-badges position-absolute top-0 end-0 m-3">
+                <span *ngIf="product.discount" class="badge bg-accent text-white rounded-pill px-3 py-2 mb-2">
+                  -{{product.discount}}%
+                </span>
+                <span class="badge bg-dark text-white rounded-pill px-3 py-2">
+                  New
+                </span>
+              </div>
+              
+              <!-- Wishlist Button -->
+              <button class="wishlist-btn position-absolute top-0 start-0 m-3 btn btn-light rounded-circle p-2">
+                <i class="far fa-heart"></i>
+              </button>
+              
+              <!-- Quick Actions -->
+              <div class="product-actions position-absolute bottom-0 start-0 end-0 p-3">
+                <div class="d-flex gap-2">
+                  <button class="btn btn-white btn-sm rounded-pill px-3 flex-grow-1 quick-view-btn">
+                    <i class="fas fa-eye me-1"></i> Quick View
+                  </button>
+                  <button class="btn btn-dark btn-sm rounded-circle p-2">
+                    <i class="fas fa-shopping-bag"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="card-body p-4">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <span class="category-tag text-uppercase small text-muted letter-spacing-1">
+                  {{ product.category.name }}
+                </span>
+                <div class="rating text-warning small">
+                  <i class="fas fa-star"></i>
+                  <span class="text-dark ms-1">{{ product.ratingsAverage | number:'1.1-1' }}</span>
+                </div>
+              </div>
+              
+              <h5 class="card-title fw-medium mb-2 text-dark">{{ product.title }}</h5>
+              <p class="card-text text-muted small mb-3 product-description">
+                {{ truncateText(product.description) }}
+              </p>
+              
+              <div class="price-section d-flex align-items-center justify-content-between">
+                <div class="price-group">
+                  <span class="current-price h5 text-dark fw-bold mb-0"> <strong> Price : </strong>${{ product.price | number }}</span>
+                  <span *ngIf="product.originalPrice" class="original-price text-decoration-line-through text-muted small ms-2">
+                    ${{product.originalPrice}}
+                  </span>
+                </div>
+                <button class="btn btn-outline-dark btn-sm rounded-pill add-to-cart-btn m-3 p-3 bg-black text-white " (click)="navigateToProduct(product._id)">
+                  <strong> Add to Cart </strong>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Details View -->
+    <div *ngIf="viewMode === 'details' && selectedProduct && !isLoading" class="product-details-section">
+      <div class="row g-5">
+        <!-- Product Images -->
+        <div class="col-lg-6">
+          <div class="product-gallery">
+            <div class="main-image-container mb-4 bg-light rounded-4 overflow-hidden position-relative">
+              <img [src]="selectedProduct.images[activeImageIndex]" 
+                   class="img-fluid w-100 main-product-image" 
+                   [alt]="selectedProduct.title">
+              
+              <!-- Image Navigation -->
+              <button class="btn btn-light rounded-circle position-absolute top-50 start-0 translate-middle-y ms-3 image-nav-btn" 
+                      (click)="previousImage()">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <button class="btn btn-light rounded-circle position-absolute top-50 end-0 translate-middle-y me-3 image-nav-btn" 
+                      (click)="nextImage()">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+              
+              <!-- Zoom Indicator -->
+              <div class="zoom-indicator position-absolute bottom-0 end-0 m-3">
+                <span class="badge bg-dark text-white rounded-pill px-3 py-2">
+                  <i class="fas fa-search-plus me-1"></i> Zoom
+                </span>
+              </div>
+            </div>
+            
+            <!-- Thumbnail Gallery -->
+            <div class="thumbnail-gallery d-flex gap-3 flex-wrap">
+              <div *ngFor="let image of selectedProduct.images; let i = index" 
+                   class="thumbnail-container"
+                   [class.active]="i === activeImageIndex"
+                   (click)="changeImage(i)">
+                <img [src]="image" class="img-thumbnail rounded-3" [alt]="selectedProduct.title + ' thumbnail ' + i">
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Product Info -->
+        <div class="col-lg-6">
+          <div class="product-info">
+            <!-- Header -->
+            <div class="product-header mb-4">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <span class="category-badge badge bg-primary text-white rounded-pill px-4 py-2">
+                  {{ selectedProduct.category.name }}
+                </span>
+                <button class="btn btn-outline-secondary rounded-circle p-3 wishlist-btn-large" title="Add to wishlist">
+                  <i class="far fa-heart fs-5"></i>
+                </button>
+              </div>
+              
+              <h1 class="product-title display-5 fw-light mb-3 text-dark">{{ selectedProduct.title }}</h1>
+              
+              <!-- Rating and Reviews -->
+              <div class="product-meta d-flex align-items-center gap-4 mb-4">
+                <div class="rating-section d-flex align-items-center">
+                  <div class="stars text-warning me-2">
+                    <i class="fas fa-star" *ngFor="let star of [1,2,3,4,5]; let i = index" 
+                       [class.text-muted]="i >= selectedProduct.ratingsAverage"></i>
+                  </div>
+                  <span class="rating-text text-dark fw-medium">{{ selectedProduct.ratingsAverage | number:'1.1-1' }}</span>
+                  <span class="review-count text-muted ms-1">({{ selectedProduct.ratingsQuantity }} reviews)</span>
+                </div>
+                <span class="sku text-muted small">SKU: {{selectedProduct._id | slice:0:8}}</span>
+              </div>
+            </div>
+            
+            <!-- Pricing -->
+            <div class="pricing-section mb-5 p-4 bg-light-subtle rounded-4">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <h2 class="current-price text-dark fw-bold mb-0">${{ selectedProduct.price | number }}</h2>
+                <span *ngIf="selectedProduct.originalPrice" 
+                      class="original-price text-decoration-line-through text-muted fs-5">
+                  ${{selectedProduct.originalPrice}}
+                </span>
+                <span *ngIf="selectedProduct.discount" 
+                      class="savings-badge badge bg-success text-white rounded-pill px-3 py-2">
+                  Save {{selectedProduct.discount}}%
+                </span>
+              </div>
+              
+              <!-- Stock Status -->
+              <div class="stock-status">
+                <div *ngIf="selectedProduct.stock" class="text-success d-flex align-items-center">
+                  <i class="fas fa-check-circle me-2"></i>
+                  <span class="fw-medium">In Stock</span>
+                  <span class="text-muted ms-2">({{selectedProduct.stock}} available)</span>
+                </div>
+                <div *ngIf="!selectedProduct.stock" class="text-danger d-flex align-items-center">
+                  <i class="fas fa-times-circle me-2"></i>
+                  <span class="fw-medium">Out of Stock</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Description -->
+            <div class="product-description mb-5">
+              <p class="lead text-muted lh-lg">{{ selectedProduct.description }}</p>
+            </div>
+            
+            <!-- Product Options -->
+            <div class="product-options border rounded-4 p-4 mb-5">
+              <div class="row g-4">
+                <!-- Colors -->
+                <div class="col-md-6" *ngIf="selectedProduct.colors && selectedProduct.colors.length > 0">
+                  <label class="form-label fw-semibold mb-3">Color:</label>
+                  <div class="color-options d-flex gap-2 flex-wrap">
+                    <div *ngFor="let color of selectedProduct.colors" 
+                         class="color-option rounded-circle position-relative" 
+                         [style.background-color]="color"
+                         [class.selected]="activeColor === color"
+                         (click)="selectColor(color)"
+                         [title]="color">
+                      <i *ngIf="activeColor === color" class="fas fa-check position-absolute top-50 start-50 translate-middle text-white"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Sizes -->
+                <div class="col-md-6" *ngIf="selectedProduct.sizes && selectedProduct.sizes.length > 0">
+                  <label class="form-label fw-semibold mb-3">Size:</label>
+                  <div class="size-options d-flex gap-2 flex-wrap">
+                    <button *ngFor="let size of selectedProduct.sizes" 
+                            class="size-option btn border rounded-3"
+                            [class.btn-dark]="activeSize === size"
+                            [class.btn-outline-secondary]="activeSize !== size"
+                            [class.text-white]="activeSize === size"
+                            (click)="selectSize(size)">
+                      {{size}}
+                    </button>
+                  </div>
+                </div>
+                
+                <!-- Quantity -->
+                <div class="col-12">
+                  <label class="form-label fw-semibold mb-3">Quantity:</label>
+                  <div class="quantity-selector d-flex align-items-center gap-3">
+                    <div class="input-group quantity-input" style="width: 140px;">
+                      <button class="btn btn-outline-secondary rounded-start-3" type="button" (click)="decrementQuantity()">
+                        <i class="fas fa-minus"></i>
+                      </button>
+                      <input type="text" class="form-control text-center border-secondary fw-bold" [value]="quantity" readonly>
+                      <button class="btn btn-outline-secondary rounded-end-3" type="button" (click)="incrementQuantity()">
+                        <i class="fas fa-plus"></i>
+                      </button>
+                    </div>
+                    <span class="text-muted small">Maximum 10 per order</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="action-buttons d-flex gap-3 mb-5">
+              <button class="btn btn-dark btn-lg px-5 py-3 flex-grow-1 rounded-3 add-to-cart-main" 
+                      [disabled]="!selectedProduct.stock">
+                <i class="fas fa-shopping-bag me-2"></i> Add to Cart
+              </button>
+              <button class="btn btn-accent btn-lg px-4 py-3 rounded-3 buy-now-btn">
+                <i class="fas fa-bolt me-2"></i> Buy Now
+              </button>
+            </div>
+            
+            <!-- Product Details -->
+            <div class="product-details-info">
+              <h5 class="fw-medium mb-4 text-dark">Product Details</h5>
+              <div class="details-list">
+                <div class="detail-item d-flex justify-content-between py-3 border-bottom">
+                  <span class="detail-label text-muted fw-medium">Brand</span>
+                  <span class="detail-value text-dark">{{selectedProduct.brand || 'LUXE'}}</span>
+                </div>
+                <div class="detail-item d-flex justify-content-between py-3 border-bottom">
+                  <span class="detail-label text-muted fw-medium">Material</span>
+                  <span class="detail-value text-dark">{{selectedProduct.material || 'Premium Quality'}}</span>
+                </div>
+                <div class="detail-item d-flex justify-content-between py-3 border-bottom">
+                  <span class="detail-label text-muted fw-medium">Weight</span>
+                  <span class="detail-value text-dark">{{selectedProduct.weight || 'N/A'}}</span>
+                </div>
+                <div class="detail-item d-flex justify-content-between py-3">
+                  <span class="detail-label text-muted fw-medium">Dimensions</span>
+                  <span class="detail-value text-dark">{{selectedProduct.dimensions || 'N/A'}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

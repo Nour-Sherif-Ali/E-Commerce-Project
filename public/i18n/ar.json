@@ -1,0 +1,23 @@
+{
+    "navbar": {
+        "home": "الصفحة الرئيسية",
+        "cart" : "عربة التسوق",
+        "product" : "المنتج",
+        "categories" : "الفئات",
+        "brand" : "العلامة التجارية",
+        "login": "تسجيل الدخول",
+        "register": "تسجيل",
+        "logout": "تسجيل الخروج"
+
+    },
+    "header" : {
+        "popular Categories" : "الفئات التسوق الشهيرة"
+    },
+    "login" : {
+        "login now" : "تسجيل الدخول الآن",
+        "youremail" : "بريدك الإلكتروني",
+        "your password" : "كلمة السر الخاصة بك",
+        "remember me" : "تذكرني"
+        
+    }
+}

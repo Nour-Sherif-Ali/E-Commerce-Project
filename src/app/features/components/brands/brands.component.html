@@ -1,0 +1,95 @@
+<!-- src/app/components/brand/brand.component.html -->
+<div class="brand-component-container">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <div class="loading-content">
+      <div class="spinner-container">
+        <div class="spinner"></div>
+      </div>
+      <p class="loading-text">Loading brands...</p>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="errorMessage" class="error-overlay">
+    <div class="error-content">
+      <div class="error-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+        </svg>
+      </div>
+      <h3 class="error-title">Something went wrong</h3>
+      <p class="error-message">{{ errorMessage }}</p>
+      <button class="retry-btn" (click)="retryLoading()">Try Again</button>
+    </div>
+  </div>
+
+  <!-- List View -->
+  <div *ngIf="isListView && !isLoading && !errorMessage" class="list-view">
+    <div class="list-header">
+      <h2 class="title">Our Brand Partners</h2>
+      <p class="subtitle">Discover our trusted partners and their offerings</p>
+    </div>
+    
+    <div class="brands-grid">
+      <div *ngFor="let brand of brands" class="brand-card" [routerLink]="['/brands', brand._id]">
+        <div class="brand-image-container">
+          <img [src]="brand.image" [alt]="brand.name" class="brand-image" loading="lazy">
+          <div class="brand-overlay">
+            <span class="view-text">View Details</span>
+          </div>
+        </div>
+        <div class="brand-content">
+          <h3 class="brand-name">{{ brand.name }}</h3>
+          <div class="brand-meta">
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail View -->
+  <div *ngIf="!isListView && !isLoading && !errorMessage && singleBrand" class="detail-view">
+    <div class="detail-container">
+      <button class="back-button" routerLink="/brands">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+        </svg>
+        Back to Brands
+      </button>
+      
+      <div class="brand-detail-card">
+        <div class="brand-media">
+          <img [src]="singleBrand.image" [alt]="singleBrand.name" class="detail-image">
+        </div>
+        <div class="brand-info">
+          <div class="brand-header">
+            <h1 class="detail-title">{{ singleBrand.name }}</h1>
+            <span class="brand-status">Active</span>
+          </div>
+          
+          <div class="brand-meta">
+            <div class="meta-item">
+              <span class="meta-label">Slug:</span>
+              <span class="meta-value">{{ singleBrand.slug }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Products:</span>
+              <span class="meta-value">{{ singleBrand.productsCount || '0' }}</span>
+            </div>
+          </div>
+          
+          <div class="brand-description" *ngIf="singleBrand.description">
+            <h3 class="description-title">About {{ singleBrand.name }}</h3>
+            <p>{{ singleBrand.description }}</p>
+          </div>
+          
+          <button class="explore-btn" [routerLink]="['/products']" [queryParams]="{brand: singleBrand._id}">
+            Explore Products
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

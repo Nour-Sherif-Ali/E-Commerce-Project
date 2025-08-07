@@ -1,0 +1,19 @@
+.heartBorder{
+    border: 2px solid grey;
+    border-radius: 50%;
+    width: 25px,;
+    height: 25px;
+    position: relative;
+    
+    
+}
+
+.heartBorder:hover{
+    background-color: red;
+    border: 2px solid red;
+    border-radius: 50%;
+    width: 25px,;
+    height: 25px;
+    position: relative;
+}
+

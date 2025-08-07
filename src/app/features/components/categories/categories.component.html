@@ -1,0 +1,136 @@
+<!-- categories.component.html -->
+<div class="categories-dashboard">
+  <!-- Header Section -->
+  <header class="dashboard-header">
+    <h1 class="dashboard-title">E-Commerce Categories</h1>
+    <div class="dashboard-controls">
+      <button class="refresh-btn" (click)="refreshAll()">
+        <i class="refresh-icon">↻</i> Refresh Data
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="dashboard-content">
+    <!-- Categories Selection Panel -->
+    <aside class="selection-panel">
+      <section class="panel-section">
+        <h2 class="section-title">Browse Categories</h2>
+        
+        <div class="selection-group">
+          <label class="selection-label">Main Category</label>
+          <select class="selection-dropdown" [(ngModel)]="categoryId" (change)="loadCategory()">
+            <option *ngFor="let cat of allCategories" [value]="cat._id">
+              {{ cat.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="selection-group">
+          <label class="selection-label">Subcategory Parent</label>
+          <select class="selection-dropdown" [(ngModel)]="subcategoryParentId" (change)="loadSubcategories()">
+            <option *ngFor="let cat of allCategories" [value]="cat._id">
+              {{ cat.name }}
+            </option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Status Panel -->
+      <section class="panel-section status-section">
+        <h2 class="section-title">System Status</h2>
+        <div class="status-indicator" [class.active]="!isLoading.allCategories && !errors.allCategories">
+          {{ isLoading.allCategories ? 'Loading...' : errors.allCategories ? 'Error' : 'Connected' }}
+        </div>
+        <div class="api-endpoint">
+          <small>API: ecommerce.routemisr.com</small>
+        </div>
+      </section>
+    </aside>
+
+    <!-- Main Display Area -->
+    <main class="display-area">
+      <!-- Category Details Card -->
+      <div class="card category-card">
+        <div class="card-header">
+          <h2 class="card-title">Category Details</h2>
+          <div class="card-actions">
+            <button class="action-btn" (click)="loadCategory()" [disabled]="isLoading.category">
+              <i class="action-icon">↻</i> Refresh
+            </button>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <ng-container *ngIf="isLoading.category">
+            <div class="skeleton-loader">
+              <div class="skeleton-image"></div>
+              <div class="skeleton-line" style="width: 70%"></div>
+              <div class="skeleton-line" style="width: 50%"></div>
+            </div>
+          </ng-container>
+
+          <div *ngIf="errors.category" class="error-message">
+            <i class="error-icon">⚠️</i>
+            <div class="error-text">{{ errors.category }}</div>
+          </div>
+
+          <div *ngIf="category && !isLoading.category" class="category-details">
+            <div class="category-image-container">
+              <img [src]="category.image" alt="{{ category.name }}" class="category-image" onerror="this.src='assets/default-category.jpg'">
+            </div>
+            <div class="category-info">
+              <h3 class="category-name">{{ category.name }}</h3>
+              <div class="category-meta">
+                <span class="meta-item"><strong>Slug:</strong> {{ category.slug }}</span>
+                <span class="meta-item"><strong>ID:</strong> {{ category._id }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subcategories Card -->
+      <div class="card subcategories-card">
+        <div class="card-header">
+          <h2 class="card-title">Subcategories</h2>
+          <div class="card-actions">
+            <button class="action-btn" (click)="loadSubcategories()" [disabled]="isLoading.subcategories">
+              <i class="action-icon">↻</i> Refresh
+            </button>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <ng-container *ngIf="isLoading.subcategories">
+            <div class="skeleton-loader">
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line"></div>
+            </div>
+          </ng-container>
+
+          <div *ngIf="errors.subcategories" class="error-message">
+            <i class="error-icon">⚠️</i>
+            <div class="error-text">{{ errors.subcategories }}</div>
+          </div>
+
+          <div *ngIf="subcategories && subcategories.length > 0 && !isLoading.subcategories" class="subcategories-list">
+            <div *ngFor="let sub of subcategories" class="subcategory-item">
+              <div class="subcategory-info">
+                <span class="subcategory-name">{{ sub.name }}</span>
+                <span class="subcategory-slug">{{ sub.slug }}</span>
+              </div>
+              <div class="subcategory-id truncate">{{ sub._id }}</div>
+            </div>
+          </div>
+
+          <div *ngIf="(!subcategories || subcategories.length === 0) && !isLoading.subcategories && !errors.subcategories" class="empty-state">
+            <i class="empty-icon">📁</i>
+            <p>No subcategories found for this parent category</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+{
+    "navbar": {
+        "home": "Home",
+        "cart" : "Shopping Cart",
+        "product" : "Product",
+        "categories" : "Categories",
+        "brand" : "Brand",
+        "login": "Login",
+        "register": "Register",
+        "logout": "Logout"
+    },
+    "header" : {
+        "popular Categories" : "Popular Shopping Categories"
+    },
+    "login" : {
+        "login now" : "Login Now",
+        "your email" : "your Email",
+        "your password" : "your Password",
+        "remember me" : "Remember Me"
+        
+    }
+}
