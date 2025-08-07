@@ -1,2 +1,48 @@
-# E-Commerce-Project
-A modern e-commerce website built with Angular using HTML, SCSS, and TypeScript. Features a responsive UI, product browsing, and dynamic components. Designed for smooth user experience and scalability using best front-end practices.
+# 🛒 E-Commerce Project
+
+This is a responsive, dynamic, and fully functional e-commerce web application built using **Angular**, **TypeScript**, **SCSS**, and **HTML**. The project simulates a complete online shopping experience with features such as product browsing, cart management, category/brand filtering, and more.
+
+---
+
+## 🚀 Features
+
+- 🧾 Browse a list of available products  
+- 🛍️ Add products to shopping cart  
+- 📦 Manage items inside the cart  
+- 🔎 Filter products by category and brand  
+- 📱 Responsive design for mobile and desktop  
+- 🧠 Code written using Angular best practices  
+- 🧪 Unit-tested core services and pipes  
+
+---
+
+## 🛠️ Technologies Used
+
+- **Angular** (CLI and Components)  
+- **TypeScript**  
+- **HTML5**  
+- **SCSS**  
+- **RxJS**  
+- **Angular Routing**
+
+---
+
+
+📌 Future Enhancements
+🔐 User authentication and login
+
+💳 Checkout & payment integration
+
+🌍 Multilingual support
+
+🧾 Order history and invoice generation
+
+🔔 Notification system
+
+
+---
+
+🙋‍♂️ Author
+Nour Sherif Ali
+linkedin 📧 : http://www.linkedin.com/in/nour-sherif-nsa
+
